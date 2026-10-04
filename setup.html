@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wedding Invitation Setup</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; background: #1a1a2e; color: #eee; min-height: 100vh; padding: 32px 16px; }
+    h1 { text-align: center; font-size: 1.6rem; margin-bottom: 8px; color: #f3ecba; }
+    .subtitle { text-align: center; color: #aaa; margin-bottom: 32px; font-size: .9rem; }
+    .card { background: #16213e; border-radius: 12px; padding: 24px; margin-bottom: 24px; max-width: 760px; margin-left: auto; margin-right: auto; }
+    .card h2 { font-size: 1rem; color: #f3ecba; margin-bottom: 16px; border-bottom: 1px solid #2a2a4a; padding-bottom: 8px; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    .row.single { grid-template-columns: 1fr; }
+    label { display: block; font-size: .8rem; color: #aaa; margin-bottom: 4px; }
+    input, textarea, select { width: 100%; background: #0f3460; border: 1px solid #2a2a5a; border-radius: 6px; color: #eee; padding: 8px 10px; font-size: .9rem; outline: none; transition: border-color .2s; }
+    input:focus, textarea:focus { border-color: #f3ecba; }
+    textarea { resize: vertical; min-height: 80px; }
+
+    /* Name order toggle */
+    .order-toggle { display: flex; gap: 8px; margin-bottom: 12px; }
+    .order-btn { flex: 1; padding: 10px; border: 2px solid #2a2a5a; border-radius: 8px; background: #0f3460; color: #aaa; cursor: pointer; font-size: .85rem; text-align: center; transition: all .2s; }
+    .order-btn.active { border-color: #f3ecba; color: #f3ecba; background: #1a2a4a; }
+
+    /* Event drag-reorder */
+    .event-item { display: grid; grid-template-columns: 28px 1fr; gap: 8px; align-items: start; margin-bottom: 12px; }
+    .drag-handle { cursor: grab; color: #555; font-size: 1.2rem; padding-top: 10px; user-select: none; text-align: center; }
+    .drag-handle:active { cursor: grabbing; }
+    .event-item.dragging { opacity: .4; }
+    .event-item.drag-over { border-top: 2px solid #f3ecba; }
+    .event-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px; background: #0f3460; border-radius: 8px; width: 100%; }
+    .event-grid label { color: #ccc; }
+    .event-label { grid-column: 1 / -1; font-weight: 600; color: #f3ecba; font-size: .85rem; margin-bottom: 4px; }
+
+    .btn { display: block; width: 100%; max-width: 760px; margin: 0 auto 12px; padding: 14px; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: opacity .2s; }
+    .btn-primary { background: #f3ecba; color: #1a1a2e; }
+    .btn-secondary { background: #2a2a4a; color: #eee; }
+    .btn:hover { opacity: .85; }
+    #status { text-align: center; padding: 10px; border-radius: 6px; max-width: 760px; margin: 0 auto 24px; display: none; }
+    .status-ok { background: #1a4a2e; color: #6fcf97; }
+    .status-err { background: #4a1a1a; color: #eb5757; }
+    .note { font-size: .78rem; color: #888; margin-top: 6px; }
+  </style>
+</head>
+<body>
+
+  <h1>🪷 Wedding Invitation Setup</h1>
+  <p class="subtitle">Fill in the details below, then click <strong>Save &amp; Apply</strong>.</p>
+  <div id="status"></div>
+
+  <!-- Couple -->
+  <div class="card">
+    <h2>Couple</h2>
+    <div class="row">
+      <div><label>Name 1 — Hero (ALL CAPS)</label><input id="name1" value="PRITI"></div>
+      <div><label>Name 2 — Hero (ALL CAPS)</label><input id="name2" value="ANKIT"></div>
+    </div>
+    <div class="row">
+      <div><label>Name 1 — Display</label><input id="name1Display" value="Priti"></div>
+      <div><label>Name 2 — Display</label><input id="name2Display" value="Ankit"></div>
+    </div>
+    <label style="margin-bottom:8px">Name order on invitation</label>
+    <div class="order-toggle">
+      <div class="order-btn active" id="btn_n1n2" onclick="setOrder('name1_weds_name2')">
+        Name 1 weds Name 2<br><small id="preview_n1n2" style="opacity:.7">Priti weds Ankit</small>
+      </div>
+      <div class="order-btn" id="btn_n2n1" onclick="setOrder('name2_weds_name1')">
+        Name 2 weds Name 1<br><small id="preview_n2n1" style="opacity:.7">Ankit weds Priti</small>
+      </div>
+    </div>
+    <input type="hidden" id="nameOrder" value="name1_weds_name2">
+  </div>
+
+  <!-- Texts -->
+  <div class="card">
+    <h2>Texts</h2>
+    <div class="row single"><label>Mantra</label><input id="mantra" value="ॐ श्री गणेशाय नम"></div>
+    <div class="row single"><label>Join Us text</label><input id="joinUsText" value="You to join us in the wedding celebrations of"></div>
+    <div class="row single"><label>Couple's Message</label><textarea id="couplesMessage">We are both so delighted that you are able to join us in celebrating what we hope will be one of the happiest days of our lives. The affection shown to us by so many people since our roka has been incredibly moving, and has touched us both deeply. We would like to take this opportunity to thank everyone most sincerely for their kindness.We are looking forward to see you at the wedding.</textarea></div>
+  </div>
+
+  <!-- Groom's Family -->
+  <div class="card">
+    <h2>Groom's Family</h2>
+    <div class="row single"><label>Blessing of</label><input id="groomBlessingOf" value="With the heavenly blessings of "></div>
+    <div class="row single"><label>Grandparents</label><input id="groomGrandparents" value="Smt. Shakuntala Devi &amp; Sm. Tribeni Prasad Gupta"></div>
+    <div class="row single"><label>Parents</label><input id="groomParents" value="Mrs. Bride Mother &amp; Mr. Bride Father"></div>
+  </div>
+
+  <!-- Bride's Family -->
+  <div class="card">
+    <h2>Bride's Family</h2>
+    <div class="row">
+      <div><label>Relation ("Son of" / "Daughter of")</label><input id="brideRelation" value="Son of"></div>
+      <div><label>Parents</label><input id="brideParents" value="Mrs. Groom Mother &amp; Mr. Groom Father,"></div>
+    </div>
+  </div>
+
+  <!-- Events -->
+  <div class="card">
+    <h2>Events (6 cards) <span style="font-size:.75rem;color:#888;font-weight:400">— drag ⠿ to reorder</span></h2>
+    <div id="eventsContainer"></div>
+  </div>
+
+  <!-- Things to Know -->
+  <div class="card">
+    <h2>Things to Know (4 cards)</h2>
+    <div id="ttkContainer"></div>
+  </div>
+
+  <!-- Countdown & Links -->
+  <div class="card">
+    <h2>Countdown &amp; Links</h2>
+    <div class="row single"><label>Countdown Date (ISO 8601 UTC)</label><input id="countdownDate" value="2026-12-06T00:00:00.000Z"><p class="note">Format: YYYY-MM-DDTHH:MM:SS.000Z</p></div>
+    <div class="row single"><label>WhatsApp RSVP Link</label><input id="whatsappRsvpLink" value="https://wa.me/91XXXXXXXXXX"></div>
+    <div class="row single"><label>Maps CTA Link</label><input id="mapsCtaLink" value="https://www.linkedin.com/in/lalitkumarod/"></div>
+    <div class="row single"><label>Instagram CTA Link</label><input id="instagramCtaLink" value="https://www.instagram.com/lalitspov/"></div>
+    <div class="row single"><label>Buy Now Link</label><input id="buyNowLink" value=""></div>
+    <div class="row single"><label>Music URL (.mp3)</label><input id="musicUrl" value="https://framerusercontent.com/assets/q8x7MYVF61gOLfkcxdG7dlXjxw.mp3"></div>
+  </div>
+
+  <button class="btn btn-primary" onclick="saveAndApply()">💾 Save &amp; Apply Config</button>
+  <button class="btn btn-secondary" onclick="previewConfig()">👁 Preview Config (console)</button>
+
+  <script>
+    // ── Name order ──────────────────────────────────────────
+    function setOrder(val) {
+      document.getElementById('nameOrder').value = val;
+      document.getElementById('btn_n1n2').classList.toggle('active', val === 'name1_weds_name2');
+      document.getElementById('btn_n2n1').classList.toggle('active', val === 'name2_weds_name1');
+    }
+
+    function updateOrderPreviews() {
+      const n1 = document.getElementById('name1Display').value || 'Name 1';
+      const n2 = document.getElementById('name2Display').value || 'Name 2';
+      document.getElementById('preview_n1n2').textContent = `${n1} weds ${n2}`;
+      document.getElementById('preview_n2n1').textContent = `${n2} weds ${n1}`;
+    }
+    document.getElementById('name1Display').addEventListener('input', updateOrderPreviews);
+    document.getElementById('name2Display').addEventListener('input', updateOrderPreviews);
+
+    // ── Events with drag-to-reorder ─────────────────────────
+    let eventOrder = [0, 1, 2, 3, 4, 5];
+    const defaultEvents = [
+      { event: "Engagement",     date: "Friday, March 11th 2026",  venue: "Rambagh, Jaipur",      time: "6pm Onwards", mapsLink: "" },
+      { event: "Haldi",          date: "Friday, 4th Dec 2026",     venue: "Khannagar, Cuttack",   time: "4pm Onwards", mapsLink: "" },
+      { event: "Mehendi",        date: "Friday, 4th Dec 2026",     venue: "Khannagar, Cuttack",   time: "6pm Onwards", mapsLink: "" },
+      { event: "Managana Handi", date: "Sunday, 6th Dec 2026",     venue: "Khannagar, Cuttack",   time: "8am Onwards", mapsLink: "" },
+      { event: "Shaadi",         date: "Friday, March 12th 2026",  venue: "Rambagh, Jaipur",      time: "6pm Onwards", mapsLink: "" },
+      { event: "Reception",      date: "Friday, March 17th 2026",  venue: "Rambagh, Jaipur",      time: "6pm Onwards", mapsLink: "" },
+    ];
+
+    function buildEventItem(origIdx, cardNum) {
+      const ev = defaultEvents[origIdx];
+      const div = document.createElement('div');
+      div.className = 'event-item';
+      div.dataset.origIdx = origIdx;
+      div.draggable = true;
+      div.innerHTML = `
+        <div class="drag-handle" title="Drag to reorder">⠿</div>
+        <div class="event-grid">
+          <div class="event-label">Card ${cardNum}</div>
+          <div><label>Event</label><input id="ev${origIdx}_event" value="${ev.event}"></div>
+          <div><label>Date</label><input id="ev${origIdx}_date" value="${ev.date}"></div>
+          <div><label>Venue</label><input id="ev${origIdx}_venue" value="${ev.venue}"></div>
+          <div><label>Time</label><input id="ev${origIdx}_time" value="${ev.time}"></div>
+          <div style="grid-column:1/-1"><label>Google Maps Link (optional)</label><input id="ev${origIdx}_maps" value="${ev.mapsLink}" placeholder="https://maps.google.com/..."></div>
+        </div>`;
+      return div;
+    }
+
+    function renderEvents() {
+      const ec = document.getElementById('eventsContainer');
+      ec.innerHTML = '';
+      eventOrder.forEach((origIdx, cardNum) => {
+        ec.appendChild(buildEventItem(origIdx, cardNum + 1));
+      });
+      initDrag();
+    }
+
+    function initDrag() {
+      const items = document.querySelectorAll('.event-item');
+      let dragSrc = null;
+
+      items.forEach(item => {
+        item.addEventListener('dragstart', e => {
+          dragSrc = item;
+          item.classList.add('dragging');
+          e.dataTransfer.effectAllowed = 'move';
+        });
+        item.addEventListener('dragend', () => {
+          item.classList.remove('dragging');
+          document.querySelectorAll('.event-item').forEach(i => i.classList.remove('drag-over'));
+        });
+        item.addEventListener('dragover', e => {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+          document.querySelectorAll('.event-item').forEach(i => i.classList.remove('drag-over'));
+          if (item !== dragSrc) item.classList.add('drag-over');
+        });
+        item.addEventListener('drop', e => {
+          e.preventDefault();
+          if (!dragSrc || dragSrc === item) return;
+          // Snapshot current field values before re-render
+          snapshotEventValues();
+          const fromIdx = eventOrder.indexOf(parseInt(dragSrc.dataset.origIdx));
+          const toIdx   = eventOrder.indexOf(parseInt(item.dataset.origIdx));
+          eventOrder.splice(toIdx, 0, eventOrder.splice(fromIdx, 1)[0]);
+          renderEvents();
+          restoreEventValues();
+        });
+      });
+    }
+
+    // Save/restore field values across re-renders
+    let savedEventValues = {};
+    function snapshotEventValues() {
+      savedEventValues = {};
+      defaultEvents.forEach((_, i) => {
+        ['event','date','venue','time','maps'].forEach(f => {
+          const el = document.getElementById(`ev${i}_${f}`);
+          if (el) savedEventValues[`ev${i}_${f}`] = el.value;
+        });
+      });
+    }
+    function restoreEventValues() {
+      Object.entries(savedEventValues).forEach(([id, val]) => {
+        const el = document.getElementById(id);
+        if (el) el.value = val;
+      });
+    }
+
+    renderEvents();
+
+    // ── Things to Know ──────────────────────────────────────
+    const defaultTTK = [
+      { title: "Hashtag", info: "While posting photos on social media please use the hashtag - #pranit" },
+      { title: "Weather", info: "It will be mostly sunny with temperature reaching up to 28 degrees at the venue" },
+      { title: "Staff",   info: "We recommend the nearby hotel called Bhola Bhawan near the venue for the staff members" },
+      { title: "Parking", info: "Valet parking for all our guests will be available at the venue" },
+    ];
+    const tc = document.getElementById('ttkContainer');
+    defaultTTK.forEach((ttk, i) => {
+      tc.innerHTML += `
+      <div class="event-grid" style="margin-bottom:12px">
+        <div class="event-label">Card ${i + 1}</div>
+        <div><label>Title</label><input id="ttk${i}_title" value="${ttk.title}"></div>
+        <div><label>Info</label><textarea id="ttk${i}_info">${ttk.info}</textarea></div>
+      </div>`;
+    });
+
+    // ── Collect & generate config ───────────────────────────
+    function collectConfig() {
+      snapshotEventValues();
+      const events = eventOrder.map(origIdx => ({
+        event:    savedEventValues[`ev${origIdx}_event`]  ?? defaultEvents[origIdx].event,
+        date:     savedEventValues[`ev${origIdx}_date`]   ?? defaultEvents[origIdx].date,
+        venue:    savedEventValues[`ev${origIdx}_venue`]  ?? defaultEvents[origIdx].venue,
+        time:     savedEventValues[`ev${origIdx}_time`]   ?? defaultEvents[origIdx].time,
+        mapsLink: savedEventValues[`ev${origIdx}_maps`]   ?? defaultEvents[origIdx].mapsLink,
+      }));
+      const thingsToKnow = defaultTTK.map((_, i) => ({
+        title: document.getElementById(`ttk${i}_title`).value,
+        info:  document.getElementById(`ttk${i}_info`).value,
+      }));
+      return {
+        nameOrder:        document.getElementById('nameOrder').value,
+        name1:            document.getElementById('name1').value,
+        name2:            document.getElementById('name2').value,
+        name1Display:     document.getElementById('name1Display').value,
+        name2Display:     document.getElementById('name2Display').value,
+        mantra:           document.getElementById('mantra').value,
+        joinUsText:       document.getElementById('joinUsText').value,
+        couplesMessage:   document.getElementById('couplesMessage').value,
+        groomBlessingOf:  document.getElementById('groomBlessingOf').value,
+        groomGrandparents:document.getElementById('groomGrandparents').value,
+        groomParents:     document.getElementById('groomParents').value,
+        brideRelation:    document.getElementById('brideRelation').value,
+        brideParents:     document.getElementById('brideParents').value,
+        events,
+        thingsToKnow,
+        countdownDate:    document.getElementById('countdownDate').value,
+        whatsappRsvpLink: document.getElementById('whatsappRsvpLink').value,
+        mapsCtaLink:      document.getElementById('mapsCtaLink').value,
+        instagramCtaLink: document.getElementById('instagramCtaLink').value,
+        buyNowLink:       document.getElementById('buyNowLink').value,
+        musicUrl:         document.getElementById('musicUrl').value,
+      };
+    }
+
+    function configToJS(cfg) {
+      const evLines  = cfg.events.map(ev => `    { event: ${JSON.stringify(ev.event)}, date: ${JSON.stringify(ev.date)}, venue: ${JSON.stringify(ev.venue)}, time: ${JSON.stringify(ev.time)}, mapsLink: ${JSON.stringify(ev.mapsLink)} },`).join('\n');
+      const ttkLines = cfg.thingsToKnow.map(t => `    { title: ${JSON.stringify(t.title)}, info: ${JSON.stringify(t.info)} },`).join('\n');
+      return `// ============================================================
+// WEDDING CONFIGURATION — Edit this file to customise the invite
+// Then run: node apply-config.js
+// ============================================================
+
+module.exports = {
+
+  // ── Couple ──────────────────────────────────────────────
+  // nameOrder: "name1_weds_name2" → Name1 weds Name2
+  //            "name2_weds_name1" → Name2 weds Name1
+  nameOrder: ${JSON.stringify(cfg.nameOrder)},
+  name1: ${JSON.stringify(cfg.name1)},
+  name2: ${JSON.stringify(cfg.name2)},
+  name1Display: ${JSON.stringify(cfg.name1Display)},
+  name2Display: ${JSON.stringify(cfg.name2Display)},
+
+  // ── Mantra ──────────────────────────────────────────────
+  mantra: ${JSON.stringify(cfg.mantra)},
+
+  // ── Invite text ─────────────────────────────────────────
+  joinUsText: ${JSON.stringify(cfg.joinUsText)},
+
+  // ── Couple's message ────────────────────────────────────
+  couplesMessage: ${JSON.stringify(cfg.couplesMessage)},
+
+  // ── Groom's family ──────────────────────────────────────
+  groomBlessingOf: ${JSON.stringify(cfg.groomBlessingOf)},
+  groomGrandparents: ${JSON.stringify(cfg.groomGrandparents)},
+  groomParents: ${JSON.stringify(cfg.groomParents)},
+
+  // ── Bride's family ──────────────────────────────────────
+  brideRelation: ${JSON.stringify(cfg.brideRelation)},
+  brideParents: ${JSON.stringify(cfg.brideParents)},
+
+  // ── Events (6 cards) ────────────────────────────────────
+  events: [
+${evLines}
+  ],
+
+  // ── Things to Know (4 cards) ────────────────────────────
+  thingsToKnow: [
+${ttkLines}
+  ],
+
+  // ── Countdown date (ISO 8601 UTC) ────────────────────────
+  countdownDate: ${JSON.stringify(cfg.countdownDate)},
+
+  // ── Links ────────────────────────────────────────────────
+  whatsappRsvpLink: ${JSON.stringify(cfg.whatsappRsvpLink)},
+  mapsCtaLink:      ${JSON.stringify(cfg.mapsCtaLink)},
+  instagramCtaLink: ${JSON.stringify(cfg.instagramCtaLink)},
+  buyNowLink:       ${JSON.stringify(cfg.buyNowLink)},
+
+  // ── Music ────────────────────────────────────────────────
+  musicUrl: ${JSON.stringify(cfg.musicUrl)},
+};
+`;
+    }
+
+    function showStatus(msg, ok) {
+      const el = document.getElementById('status');
+      el.textContent = msg;
+      el.className = ok ? 'status-ok' : 'status-err';
+      el.style.display = 'block';
+      setTimeout(() => el.style.display = 'none', 5000);
+    }
+
+    async function saveAndApply() {
+      const cfg = collectConfig();
+      const js  = configToJS(cfg);
+      try {
+        const res = await fetch('/api/apply', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ config: js }) });
+        if (res.ok) { showStatus('✅ Config saved and applied! Refresh index.html to see changes.', true); return; }
+        throw new Error(await res.text());
+      } catch {
+        const blob = new Blob([js], { type: 'text/javascript' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'wedding.config.js';
+        a.click();
+        showStatus('📥 Config downloaded. Replace wedding.config.js then run: node apply-config.js', true);
+      }
+    }
+
+    function previewConfig() {
+      console.log(configToJS(collectConfig()));
+      showStatus('Config printed to browser console (F12).', true);
+    }
+  </script>
+</body>
+</html>
