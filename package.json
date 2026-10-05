@@ -1,0 +1,13 @@
+{
+  "name": "indian-wedding-invi-lalitkumar",
+  "version": "1.0.0",
+  "description": "Indian wedding invitation website built on a Framer export",
+  "private": true,
+  "scripts": {
+    "dev": "npx serve . -p 3000",
+    "apply-config": "node apply-config.js"
+  },
+  "devDependencies": {
+    "serve": "^14.2.3"
+  }
+}

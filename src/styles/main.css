@@ -1,0 +1,267 @@
+/* =============================================================
+   src/styles/main.css
+   Custom styles layered on top of Framer's generated CSS.
+   All Framer-generated styles remain inline in index.html.
+   ============================================================= */
+
+/* ── Global overrides ─────────────────────────────────────── */
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* Hide Framer "Buy Now" badge */
+.framer-JT1sO {
+  display: none !important;
+}
+
+/* ── Gallery frame image fix ──────────────────────────────── */
+.framer-4rlk9i > div[data-framer-background-image-wrapper] img {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  width: 150% !important;
+  height: 66.6667% !important;
+  max-width: none !important;
+  transform: translate(-50%, -50%) rotate(90deg) !important;
+  object-fit: cover !important;
+}
+
+.framer-679jd,
+.framer-sif4cl,
+.framer-1w6qfi3,
+.framer-1qvpcia,
+.framer-pft7l8,
+.framer-l15e94 {
+  width: 100% !important;
+  height: 100% !important;
+  aspect-ratio: unset !important;
+}
+
+/* ── Event card 3-D flip ──────────────────────────────────── */
+.framer-1xxttys-container,
+.framer-1mhegaa-container,
+.framer-y390rh-container,
+.framer-8j9rab-container,
+.framer-15hmep-container,
+.framer-v371mv-container {
+  perspective: 1200px;
+}
+
+.framer-eqI5A {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) !important;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.framer-eqI5A:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.9);
+  outline-offset: 6px;
+  border-radius: 40px;
+}
+
+.framer-eqI5A > .framer-1ykmldp {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.framer-eqI5A.is-flipped {
+  transform: rotateY(180deg) !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .framer-1xxttys-container:hover .framer-eqI5A,
+  .framer-1mhegaa-container:hover .framer-eqI5A,
+  .framer-y390rh-container:hover .framer-eqI5A,
+  .framer-8j9rab-container:hover .framer-eqI5A,
+  .framer-15hmep-container:hover .framer-eqI5A,
+  .framer-v371mv-container:hover .framer-eqI5A {
+    transform: rotateY(180deg) !important;
+  }
+}
+
+/* ── Card front / back shared geometry ────────────────────── */
+.ecf-front,
+.event-card-back {
+  --w: 295px;
+  --h: 377px;
+  --r: 180px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--w);
+  height: var(--h);
+  transform: translate(-50%, -50%);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  box-sizing: border-box;
+}
+
+/* ── Card front hint ──────────────────────────────────────── */
+.ecf-front {
+  pointer-events: none;
+  z-index: 4;
+}
+
+.ecf-hint {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-family: "Cormorant", serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: rgb(69, 160, 134);
+  opacity: 0.9;
+}
+
+.ecf-hint b {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  line-height: 1;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(69, 160, 134, 0.55);
+  animation: ecfPulse 2s ease-in-out 3;
+}
+
+.ecf-hint .h { display: none; }
+
+@media (hover: hover) and (pointer: fine) {
+  .ecf-hint .t { display: none; }
+  .ecf-hint .h { display: inline; }
+}
+
+@keyframes ecfPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(69, 160, 134, 0.5); }
+  50%       { box-shadow: 0 0 0 9px rgba(69, 160, 134, 0); }
+}
+
+/* ── Card back face ───────────────────────────────────────── */
+.event-card-back {
+  transform: translate(-50%, -50%) rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 44px 36px;
+  text-align: center;
+  z-index: 5;
+  background: linear-gradient(145deg, #edf0bd, #dfe5a6);
+  border: 2px solid #d5b95d;
+  border-radius: var(--r);
+  box-shadow: 0 0 19px rgba(0, 0, 0, 0.6), inset 0 0 0 5px rgba(255, 255, 255, 0.15);
+}
+
+.event-card-back h3 {
+  margin: 0 0 10px;
+  font-family: "Aboreto", sans-serif;
+  font-size: 23px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: rgb(69, 160, 134);
+}
+
+.event-card-back .back-divider {
+  width: 55px;
+  height: 1px;
+  margin: 0 0 12px;
+  background: rgb(69, 160, 134);
+}
+
+.event-card-back p {
+  margin: 3px 0;
+  font-family: "Cormorant", serif;
+  font-size: 16px;
+  line-height: 1.3;
+  color: rgb(69, 160, 134);
+}
+
+.ecf-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.ecf-btn {
+  font-family: "Cormorant", serif;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+  min-height: 38px;
+  padding: 0 20px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: #fff;
+  background: rgb(69, 160, 134);
+  border: 1.5px solid rgb(69, 160, 134);
+}
+
+.ecf-btn.alt {
+  color: rgb(69, 160, 134);
+  background: transparent;
+}
+
+.ecf-back-hint {
+  margin-top: 10px !important;
+  font-size: 12px !important;
+  opacity: 0.65;
+}
+
+/* ── Tablet ───────────────────────────────────────────────── */
+@media (min-width: 810px) and (max-width: 1199.98px) {
+  .ecf-front,
+  .event-card-back {
+    --w: 240px;
+    --h: 310px;
+    --r: 113px;
+  }
+  .event-card-back { padding: 32px 28px; }
+  .event-card-back h3 { font-size: 19px; }
+  .event-card-back p  { font-size: 14px; }
+  .ecf-btn            { min-height: 34px; font-size: 14px; }
+  .ecf-hint           { top: 22px; }
+}
+
+/* ── Phone ────────────────────────────────────────────────── */
+@media (max-width: 809.98px) {
+  .ecf-front,
+  .event-card-back {
+    --w: 328px;
+    --h: 431px;
+    --r: 158px;
+    top: 46.7px;
+    transform: translateX(-50%);
+  }
+  .event-card-back {
+    transform: translateX(-50%) rotateY(180deg);
+    padding: 52px 40px;
+  }
+  .event-card-back h3 { font-size: 25px; }
+  .event-card-back p  { font-size: 17px; }
+  .ecf-btn            { min-height: 42px; font-size: 16px; padding: 0 24px; }
+}
+
+/* ── Reduced motion ───────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .framer-eqI5A { transition-duration: 0.01s !important; }
+  .ecf-hint b   { animation: none; }
+}
