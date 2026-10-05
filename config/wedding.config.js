@@ -60,5 +60,17 @@ module.exports = {
   buyNowLink: "",
 
   // ── Music ────────────────────────────────────────────────
-  musicUrl: "assets/background_music.mp3",
+  musicUrl: "assets/media/background_music.mp3",
+
+  // ── Event card back-face content ─────────────────────────
+  // Keys must match the event name shown on the card front.
+  eventHours: 3,
+  eventCardBack: {
+    "Mehendi":       { title: "Mehendi Night",      lines: ["Music, dance & henna artists", "Dress Code: Colourful Traditional", "Dinner served"] },
+    "Haldi":         { title: "Haldi Ceremony",     lines: ["Wear yellow & have fun!", "Dress Code: Yellow / Pastels", "Snacks & refreshments"] },
+    "Mangana Handi": { title: "Mangana Handi",      lines: ["A traditional pre-wedding ritual", "Dress Code: Traditional", "Breakfast served"] },
+    "Engagement":    { title: "Ring Ceremony",      lines: ["Join us as we exchange rings", "Dress Code: Traditional", "Dinner & celebrations"] },
+    "Shaadi":        { title: "The Wedding",        lines: ["Pheras at the auspicious muhurat", "Dress Code: Traditional / Ethnic", "Dinner follows"] },
+    "Reception":     { title: "Reception",          lines: ["An evening of music & blessings", "Dress Code: Formal / Ethnic", "Dinner & cocktails"] },
+  },
 };
