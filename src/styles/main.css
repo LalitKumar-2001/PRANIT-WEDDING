@@ -251,6 +251,20 @@ body {
   perspective: 1200px;
 }
 
+/* Reception card repurposed as Sangeet — visible on all devices */
+
+/* ── Hide Engagement card ─────────────────────────────────── */
+.framer-1xxttys-container {
+  display: none !important;
+}
+
+/* ── Card display order: Mehendi → Sangeet → Haldi -> Mangana Handi → Shaadi ── */
+.framer-y390rh-container  { order: 1; } /* Mehendi      */
+.framer-v371mv-container  { order: 2; } /* Sangeet      */
+.framer-1mhegaa-container { order: 3; } /* Haldi        */
+.framer-8j9rab-container  { order: 4; } /* Mangana Handi */
+.framer-15hmep-container  { order: 5; } /* Shaadi       */
+
 .framer-eqI5A {
   position: relative;
   transform-style: preserve-3d;

@@ -69,6 +69,24 @@ function initVenueOverrides(events) {
   new MutationObserver(inject).observe(document.body, { childList: true, subtree: true });
 }
 
+function initEventNameOverrides() {
+  const nameOverrides = { 'Reception': 'Sangeet' };
+  const inject = () => {
+    document.querySelectorAll('.framer-eqI5A').forEach(card => {
+      const nameEl = card.querySelector('.framer-d9o4fp');
+      if (!nameEl) return;
+      const current = nameEl.textContent.trim();
+      const override = nameOverrides[current];
+      if (override) {
+        const p = nameEl.querySelector('p') ?? nameEl;
+        if (p.textContent.trim() !== override) p.textContent = override;
+      }
+    });
+  };
+  inject();
+  new MutationObserver(inject).observe(document.body, { childList: true, subtree: true });
+}
+
 function initMapsCtaLink(url) {
   if (!url) return;
   const inject = () => {
@@ -117,16 +135,16 @@ function init() {
   initNavigation();
   initCountdownHeading();
   initPresenceText();
+  initEventNameOverrides();
   if (config.mapsCtaLink) initMapsCtaLink(config.mapsCtaLink);
-  else initMapsCtaLink('https://maps.app.goo.gl/gsEhJjka3zv6nRWc9');
+  else initMapsCtaLink('https://www.google.com/maps/place/Creative+Convention/@20.4304149,85.8713856,878m/data=!3m2!1e3!4b1!4m6!3m5!1s0x3a190db5d216c61d:0xc2da6f642323740b!8m2!3d20.4304149!4d85.8713856!16s%2Fg%2F11f57vbvgs?entry=ttu&g_ep=EgoyMDI2MTAwNy4wIKXMDSoASAFQAw%3D%3D');
   if (config.events) initVenueOverrides(config.events);
   else initVenueOverrides([
-    { event: 'Engagement',     venue: 'Red Mirchi, Trisulia' },
-    { event: 'Haldi',          venue: 'Trisulia, Katak' },
-    { event: 'Mehendi',        venue: 'Trisulia, Katak' },
-    { event: 'Managana Handi', venue: 'Khannagar, Kataka' },
-    { event: 'Shaadi',         venue: 'Creative Convention, Balikuda' },
-    { event: 'Reception',      venue: 'Gandarpur, Kataka' },
+    { event: 'Haldi',          venue: 'MM Villa, Trisulia, Kataka' },
+    { event: 'Mehendi',        venue: 'MM Villa, Trisulia, Kataka' },
+    { event: 'Reception',      venue: 'MM Villa, Trisulia, Kataka' },
+    { event: 'Mangana Handi', venue: 'PritiPrakash Niwas, Khannagar, Kataka' },
+    { event: 'Shaadi',         venue: 'Creative Convention, Balikuda, Kataka' }
   ]);
 
   const countdownDate = config.countdownDate ?? '2026-12-06T06:00:00.000Z';

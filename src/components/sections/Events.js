@@ -45,9 +45,9 @@ function downloadCalendarFile(card, coupleName, eventHours) {
 /**
  * Build the back face of an event card.
  */
-function createBackFace(card, backData, coupleName, eventHours, mapsLink) {
+function createBackFace(card, backData, lookupName, coupleName, eventHours, mapsLink) {
   const eventName = getText(card, '.framer-d9o4fp');
-  const info = backData[eventName] ?? { title: eventName, lines: [] };
+  const info = backData[lookupName] ?? { title: lookupName, lines: [] };
 
   const back = document.createElement('div');
   back.className = 'event-card-back';
@@ -91,14 +91,18 @@ function createFrontHint() {
  * @param {number} eventHours - Default event duration in hours
  */
 export function initEventCards(backData, coupleName, eventHours = 3) {
+  // Allow backData keyed by either the overridden display name or the Framer original name
+  const FRAMER_NAME_MAP = { 'Sangeet': 'Reception' };
+
   document.querySelectorAll('.framer-eqI5A').forEach(card => {
     const eventName = getText(card, '.framer-d9o4fp');
-    if (!backData[eventName]) return;
+    const lookupName = backData[eventName] ? eventName : (FRAMER_NAME_MAP[eventName] ?? eventName);
+    if (!backData[lookupName]) return;
 
     const mapsLink = card.closest('[data-maps-link]')?.dataset.mapsLink ?? '';
 
     card.appendChild(createFrontHint());
-    card.appendChild(createBackFace(card, backData, coupleName, eventHours, mapsLink));
+    card.appendChild(createBackFace(card, backData, lookupName, coupleName, eventHours, mapsLink));
 
     // Accessibility
     card.setAttribute('tabindex', '0');
