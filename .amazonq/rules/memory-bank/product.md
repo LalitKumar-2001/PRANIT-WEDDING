@@ -10,6 +10,9 @@ A customisable Indian wedding invitation website built on top of a Framer SSR ex
 - **Smooth scroll & scroll-triggered animations** – section-aware navigation highlight and entrance animations
 - **Framer watermark suppression** – hides the "Buy Now" badge injected by Framer
 - **Single config file** – all names, dates, venues, links, and card content live in `config/wedding.config.js`; run `node apply-config.js` to apply changes to `index.html`
+- **Things to Know section** – replaced with a full-bleed floral background image (`2dFaPNHiZWIx3VvP26NqORM2vMY.png`); Framer-rendered inner content hidden via CSS; "Countdown Begins..." heading injected via JS
+- **Date reveal section** – blended seamlessly into the floral background (transparent background, dark ink text colours)
+- **Presence text** – glowing golden "Awaiting your presence - PritiPrakash Family" text injected into the footer lanterns section with a pulsing glow animation
 
 ## Target Users
 - Couples (or their families) who purchased the Framer wedding invitation template and want to personalise it without touching Framer directly

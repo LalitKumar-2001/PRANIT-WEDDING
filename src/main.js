@@ -49,6 +49,64 @@ function initOptimizedImages() {
   });
 }
 
+function initVenueOverrides(events) {
+  if (!events?.length) return;
+  const venueMap = Object.fromEntries(events.map(e => [e.event, e.venue]));
+  const inject = () => {
+    document.querySelectorAll('.framer-eqI5A').forEach(card => {
+      const nameEl = card.querySelector('.framer-d9o4fp');
+      const venueEl = card.querySelector('.framer-1lwecf7');
+      if (!nameEl || !venueEl) return;
+      const eventName = nameEl.textContent.trim();
+      const venue = venueMap[eventName];
+      if (venue && venueEl.textContent.trim() !== venue) {
+        const p = venueEl.querySelector('p') ?? venueEl;
+        p.textContent = venue;
+      }
+    });
+  };
+  inject();
+  new MutationObserver(inject).observe(document.body, { childList: true, subtree: true });
+}
+
+function initMapsCtaLink(url) {
+  if (!url) return;
+  const inject = () => {
+    const container = document.querySelector('.framer-gug0pj-container');
+    if (!container) return;
+    const anchor = container.querySelector('a');
+    if (anchor && anchor.href !== url) anchor.href = url;
+  };
+  inject();
+  new MutationObserver(inject).observe(document.body, { childList: true, subtree: true });
+}
+
+function initPresenceText() {
+  const inject = () => {
+    const section = document.querySelector('.framer-1rq20ml');
+    if (!section || section.querySelector('.ttk-presence-text')) return;
+    const el = document.createElement('p');
+    el.className = 'ttk-presence-text';
+    el.textContent = 'Awaiting your presence - PritiPrakash Family';
+    section.appendChild(el);
+  };
+  inject();
+  new MutationObserver(inject).observe(document.body, { childList: true, subtree: true });
+}
+
+function initCountdownHeading() {
+  const inject = () => {
+    const section = document.querySelector('.framer-jcebrp');
+    if (!section || section.querySelector('.ttk-countdown-heading')) return;
+    const el = document.createElement('p');
+    el.className = 'ttk-countdown-heading';
+    el.textContent = 'Countdown Begins...';
+    section.appendChild(el);
+  };
+  inject();
+  new MutationObserver(inject).observe(document.body, { childList: true, subtree: true });
+}
+
 function init() {
   const config = getConfig();
 
@@ -57,6 +115,19 @@ function init() {
   initSmoothScroll();
   initScrollAnimations();
   initNavigation();
+  initCountdownHeading();
+  initPresenceText();
+  if (config.mapsCtaLink) initMapsCtaLink(config.mapsCtaLink);
+  else initMapsCtaLink('https://maps.app.goo.gl/gsEhJjka3zv6nRWc9');
+  if (config.events) initVenueOverrides(config.events);
+  else initVenueOverrides([
+    { event: 'Engagement',     venue: 'Red Mirchi, Trisulia' },
+    { event: 'Haldi',          venue: 'Trisulia, Katak' },
+    { event: 'Mehendi',        venue: 'Trisulia, Katak' },
+    { event: 'Managana Handi', venue: 'Khannagar, Kataka' },
+    { event: 'Shaadi',         venue: 'Creative Convention, Balikuda' },
+    { event: 'Reception',      venue: 'Gandarpur, Kataka' },
+  ]);
 
   const countdownDate = config.countdownDate ?? '2026-12-06T06:00:00.000Z';
   initDateReveal(countdownDate, `${config.name1Display ?? 'Priti'} & ${config.name2Display ?? 'Ankit'}`);

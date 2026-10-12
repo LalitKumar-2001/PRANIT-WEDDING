@@ -26,6 +26,24 @@ export function initMusicPlayer(src) {
 }
 ```
 
+### MutationObserver Injection Pattern
+For sections that Framer JS re-renders at runtime, content is injected via `MutationObserver` with a duplicate guard. This is the required pattern for any DOM injection into Framer-managed elements.
+
+```js
+function initPresenceText() {
+  const inject = () => {
+    const section = document.querySelector('.framer-1rq20ml');
+    if (!section || section.querySelector('.ttk-presence-text')) return;
+    const el = document.createElement('p');
+    el.className = 'ttk-presence-text';
+    el.textContent = 'Awaiting your presence - PritiPrakash Family';
+    section.appendChild(el);
+  };
+  inject();
+  new MutationObserver(inject).observe(document.body, { childList: true, subtree: true });
+}
+```
+
 ### Named Constants for Magic Numbers
 Time/math constants are extracted to named `const` at module scope:
 
@@ -56,7 +74,8 @@ export function parseDate(str) { ... }
 |---|---|---|
 | Functions | camelCase verb-noun | `initEventCards`, `downloadCalendarFile`, `createBackFace` |
 | CSS state classes | kebab-case with `is-` prefix | `.is-flipped`, `.is-active`, `.is-visible` |
-| CSS component classes | `ecf-` prefix for hand-authored card elements | `.ecf-btn`, `.ecf-hint`, `.ecf-actions` |
+| CSS component classes | `ecf-` prefix for event card elements | `.ecf-btn`, `.ecf-hint`, `.ecf-actions` |
+| CSS injected element classes | `ttk-` prefix for hand-injected overlays | `.ttk-countdown-heading`, `.ttk-presence-text` |
 | Config keys | camelCase | `countdownDate`, `eventCardBack`, `musicUrl` |
 | Constants | SCREAMING_SNAKE_CASE | `MS_PER_DAY`, `MONTHS` |
 
@@ -74,13 +93,34 @@ if (config.eventCardBack) initEventCards(config.eventCardBack, ...);
 ```
 Never assume a config key exists — always guard or use `?? default`.
 
+### CSS Suppression of Framer-Rendered Content
+Framer JS re-renders sections at runtime and cannot be stopped. To hide unwanted Framer content, use `display: none !important` on the inner wrapper, then provide the replacement visually via CSS pseudo-elements or injected DOM nodes:
+
+```css
+/* Hide Framer-rendered inner content */
+.framer-jcebrp .framer-1ytz0ta {
+  display: none !important;
+}
+
+/* Replace with background image via pseudo-element */
+.framer-jcebrp::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('assets/images/background/2dFaPNHiZWIx3VvP26NqORM2vMY.png');
+  background-size: cover;
+  background-position: center;
+  z-index: 1;
+}
+```
+
 ### CSS-Class State Machine
 Interactivity is expressed entirely through CSS class toggles; no inline style mutations for state:
 
 ```js
-card.classList.toggle('is-flipped');   // flip
-link.classList.toggle('is-active', isActive); // nav highlight
-e.target.classList.add('is-visible');  // scroll animation
+card.classList.toggle('is-flipped');
+link.classList.toggle('is-active', isActive);
+e.target.classList.add('is-visible');
 ```
 
 ### IntersectionObserver Over Scroll Events
@@ -97,16 +137,6 @@ Autoplay and similar one-shot interactions use `{ once: true }`:
 ```js
 document.addEventListener('click', play, { once: true });
 document.addEventListener('touchstart', play, { once: true });
-```
-
-### DOM Element Creation Pattern
-New elements are built with `document.createElement` + `.innerHTML` for multi-child structures, then event listeners are attached via `querySelector` on the new element:
-
-```js
-const back = document.createElement('div');
-back.className = 'event-card-back';
-back.innerHTML = `<h3>${escapeHtml(info.title)}</h3>...`;
-back.querySelector('.ecf-ics')?.addEventListener('click', handler);
 ```
 
 ### Blob Download Pattern
@@ -131,6 +161,14 @@ URL.revokeObjectURL(link.href);
 - All custom CSS lives in `src/styles/main.css`
 - Framer class overrides use `!important` only when necessary to beat Framer's specificity
 
+### ttk- Prefix for Injected Elements
+All hand-injected overlay elements use the `ttk-` CSS class prefix to avoid collisions with Framer classes:
+
+```css
+.ttk-countdown-heading { ... }  /* "Countdown Begins..." over floral bg */
+.ttk-presence-text { ... }      /* Glowing golden text in footer section */
+```
+
 ### CSS Custom Properties for Card Geometry
 Card dimensions are centralised as custom properties and overridden per breakpoint:
 
@@ -152,12 +190,13 @@ Card dimensions are centralised as custom properties and overridden per breakpoi
 | Desktop | `min-width: 1200px` (implicit) |
 
 ### Accessibility in CSS
-Always include `:focus-visible` styles and `@media (prefers-reduced-motion: reduce)` overrides:
+Always include `:focus-visible` styles and `@media (prefers-reduced-motion: reduce)` overrides. All animations (card flip, glow pulse, date reveal) must be listed in the reduced-motion block:
 
 ```css
-.framer-eqI5A:focus-visible { outline: 2px solid rgba(255,255,255,0.9); }
 @media (prefers-reduced-motion: reduce) {
   .framer-eqI5A { transition-duration: 0.01s !important; }
+  .ecf-hint b   { animation: none; }
+  .ttk-presence-text { animation: none; }
 }
 ```
 
@@ -166,6 +205,7 @@ Always include `:focus-visible` styles and `@media (prefers-reduced-motion: redu
 ## Security Practices
 
 - All user-facing strings inserted via `innerHTML` are passed through `escapeHtml()` from `src/utils/dom.js`
+- Text injected via `textContent` (e.g. `ttk-countdown-heading`, `ttk-presence-text`) is safe by default — no escaping needed
 - External links always include `rel="noopener"` and `target="_blank"`
 - ICS content escapes `,`, `;`, `\` per RFC 5545 before embedding
 
@@ -179,3 +219,4 @@ Always include `:focus-visible` styles and `@media (prefers-reduced-motion: redu
 - Do not use default exports in `src/`
 - Do not mutate inline styles for component state — toggle CSS classes instead
 - Do not add runtime npm dependencies — the project is intentionally zero-dependency at runtime
+- Do not attempt to remove Framer-rendered content by editing static HTML — Framer JS re-renders it at runtime; use CSS `display: none !important` instead

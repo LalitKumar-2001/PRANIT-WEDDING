@@ -38,14 +38,12 @@ body {
 .date-reveal {
   --date-olive: #696b36;
   --date-ivory: #f3ecba;
-  --date-gold: #dcdda6;
+  --date-gold: #454824;
   --date-ink: #454824;
   width: 100%;
   padding: clamp(48px, 8vw, 104px) 22px;
-  color: var(--date-ivory);
-  background:
-    radial-gradient(ellipse at 12% 0%, rgba(220, 221, 166, 0.17), transparent 42%),
-    linear-gradient(135deg, #454824, var(--date-olive) 55%, #4b4e29);
+  color: var(--date-ink);
+  background: transparent;
   overflow: hidden;
   animation: dateRevealEnter 800ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
@@ -500,6 +498,111 @@ body {
 
 }
 
+/* ── Things to Know — background image only ───────────────── */
+.framer-jcebrp {
+  position: relative !important;
+  height: 60vw !important;
+  max-height: 700px !important;
+  min-height: 320px !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+}
+
+/* Hide all Framer-rendered inner content */
+.framer-jcebrp .framer-1ytz0ta {
+  display: none !important;
+}
+
+/* Countdown heading overlay */
+.ttk-countdown-heading {
+  position: absolute;
+  top: 38%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  margin: 0;
+  font-family: "Aboreto", sans-serif;
+  font-size: clamp(22px, 4vw, 42px);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-align: center;
+  color: #454824;
+  white-space: nowrap;
+}
+
+@media (max-width: 809.98px) {
+  .ttk-countdown-heading {
+    font-size: clamp(18px, 5.5vw, 28px);
+    top: 35%;
+  }
+}
+
+/* Show background image via pseudo-element */
+.framer-jcebrp::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('assets/images/background/2dFaPNHiZWIx3VvP26NqORM2vMY.png');
+  background-size: cover;
+  background-position: center;
+  z-index: 1;
+}
+
+.ttk-bg-wrapper { display: none !important; }
+
+@media (max-width: 809.98px) {
+  .framer-jcebrp {
+    height: 100vw !important;
+    max-height: 500px !important;
+    min-height: 260px !important;
+    padding: 0 !important;
+  }
+}
+
+/* ── Presence text in footer lanterns section ────────────── */
+.ttk-presence-text {
+  position: relative;
+  z-index: 2;
+  margin: 0 0 60px;
+  font-family: "Aboreto", sans-serif;
+  font-size: clamp(16px, 3.5vw, 28px);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-align: center;
+  color: #f5c842;
+  text-shadow:
+    0 0 8px rgba(245, 200, 66, 0.9),
+    0 0 20px rgba(245, 200, 66, 0.6),
+    0 0 40px rgba(212, 160, 23, 0.4),
+    0 2px 6px rgba(0, 0, 0, 0.6);
+  animation: ttk-glow-pulse 2.8s ease-in-out infinite;
+}
+
+@keyframes ttk-glow-pulse {
+  0%, 100% {
+    text-shadow:
+      0 0 8px rgba(245, 200, 66, 0.9),
+      0 0 20px rgba(245, 200, 66, 0.6),
+      0 0 40px rgba(212, 160, 23, 0.4),
+      0 2px 6px rgba(0, 0, 0, 0.6);
+  }
+  50% {
+    text-shadow:
+      0 0 14px rgba(245, 200, 66, 1),
+      0 0 35px rgba(245, 200, 66, 0.8),
+      0 0 65px rgba(212, 160, 23, 0.6),
+      0 2px 6px rgba(0, 0, 0, 0.6);
+  }
+}
+
+@media (max-width: 809.98px) {
+  .ttk-presence-text {
+    font-size: clamp(14px, 4.5vw, 20px);
+    padding: 0 20px;
+    margin: 0 0 40px;
+  }
+}
+
 /* ── Reduced motion ───────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .framer-eqI5A { transition-duration: 0.01s !important; }
@@ -507,5 +610,6 @@ body {
   .date-reveal,
   .date-reveal__details,
   .date-reveal__day.is-special::before,
-  .date-reveal__value.is-changing { animation: none; }
+  .date-reveal__value.is-changing,
+  .ttk-presence-text { animation: none; }
 }

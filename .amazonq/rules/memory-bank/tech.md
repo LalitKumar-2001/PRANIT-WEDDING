@@ -2,7 +2,7 @@
 
 ## Languages
 - **JavaScript (ES2020+)** — all custom source in `src/`; uses ES modules (`import`/`export`), optional chaining (`?.`), nullish coalescing (`??`), `async/await`
-- **CSS3** — `src/styles/main.css`; uses custom properties, `@keyframes`, 3-D transforms (`perspective`, `rotateY`), `IntersectionObserver`-triggered transitions
+- **CSS3** — `src/styles/main.css`; uses custom properties, `@keyframes`, 3-D transforms (`perspective`, `rotateY`), `IntersectionObserver`-triggered transitions, `backdrop-filter`
 - **HTML5** — `index.html` is Framer SSR output; `src/main.js` loaded via `<script type="module">`
 
 ## Runtime Environment
@@ -35,6 +35,7 @@ node apply-config.js # apply wedding.config.js → index.html
 
 ## Browser APIs Used
 - `IntersectionObserver` — scroll animations and active nav detection
+- `MutationObserver` — image src swaps, runtime DOM injection into Framer-rendered sections
 - `Web Audio / HTMLAudioElement` — background music player
 - `Blob` + `URL.createObjectURL` — `.ics` calendar file download
 - `document.createElement('style')` — dynamic CSS injection (Watermark)

@@ -36,7 +36,7 @@ module.exports = {
   events: [
     { event: "Engagement", date: "Friday, 9th Sep 2026", venue: "Red Mirchi, Trisulia", time: "12pm Onwards", mapsLink: "https://maps.app.goo.gl/CotNnjBZ9CPivikV7" },
     { event: "Haldi", date: "Friday, 4th Dec 2026", venue: "Khannagar, Kataka", time: "4pm Onwards", mapsLink: "https://maps.app.goo.gl/nztDZypZiyZP76Kq7" },
-    { event: "Mehendi", date: "Friday, 4th Dec 2026", venue: "Khannagar, Kataka", time: "6pm Onwards", mapsLink: "https://maps.app.goo.gl/nztDZypZiyZP76Kq7" },
+    { event: "Mehendi", date: "Friday, 4th Dec 2026", venue: "Trisulia, Kataka", time: "6pm Onwards", mapsLink: "https://maps.app.goo.gl/nztDZypZiyZP76Kq7" },
     { event: "Managana Handi", date: "Sunday, 6th Dec 2026", venue: "Khannagar, Kataka", time: "8am Onwards", mapsLink: "https://maps.app.goo.gl/nztDZypZiyZP76Kq7" },
     { event: "Shaadi", date: "Friday, 6th Dec 2026", venue: "Creative Convention, Balikuda", time: "6pm Onwards", mapsLink: "https://maps.app.goo.gl/tbCjbczNkigvtUYG8" },
     { event: "Reception", date: "Friday, 9th Dec 2026", venue: "Gandarpur, Kataka", time: "6pm Onwards", mapsLink: "https://maps.app.goo.gl/Rq1YjBynA6oqNEkU8" },
