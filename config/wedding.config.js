@@ -34,9 +34,9 @@ module.exports = {
 
   // ── Events (6 cards) ────────────────────────────────────
   events: [
-    { event: "Engagement", date: "Friday, 9th Sep 2026", venue: "Red Mirchi, Trisulia", time: "12pm Onwards", mapsLink: "https://maps.app.goo.gl/CotNnjBZ9CPivikV7" },
-    { event: "Haldi", date: "Friday, 4th Dec 2026", venue: "Khannagar, Kataka", time: "4pm Onwards", mapsLink: "https://maps.app.goo.gl/nztDZypZiyZP76Kq7" },
-    { event: "Mehendi", date: "Friday, 4th Dec 2026", venue: "Khannagar, Kataka", time: "6pm Onwards", mapsLink: "https://maps.app.goo.gl/nztDZypZiyZP76Kq7" },
+    { event: "Engagement", date: "Friday, 9th Sep 2026", venue: "Red Mirchi, Trisulia", time: "12pm Onwards", mapsLink: "https://maps.app.goo.gl/gsEhJjka3zv6nRWc9" },
+    { event: "Haldi", date: "Friday, 4th Dec 2026", venue: "Trisulia, Katak", time: "4pm Onwards", mapsLink: "https://maps.app.goo.gl/nztDZypZiyZP76Kq7" },
+    { event: "Mehendi", date: "Friday, 4th Dec 2026", venue: "Trisulia, Katak", time: "6pm Onwards", mapsLink: "https://maps.app.goo.gl/nztDZypZiyZP76Kq7" },
     { event: "Managana Handi", date: "Sunday, 6th Dec 2026", venue: "Khannagar, Kataka", time: "8am Onwards", mapsLink: "https://maps.app.goo.gl/nztDZypZiyZP76Kq7" },
     { event: "Shaadi", date: "Friday, 6th Dec 2026", venue: "Creative Convention, Balikuda", time: "6pm Onwards", mapsLink: "https://maps.app.goo.gl/tbCjbczNkigvtUYG8" },
     { event: "Reception", date: "Friday, 9th Dec 2026", venue: "Gandarpur, Kataka", time: "6pm Onwards", mapsLink: "https://maps.app.goo.gl/Rq1YjBynA6oqNEkU8" },
@@ -55,7 +55,7 @@ module.exports = {
 
   // ── Links ────────────────────────────────────────────────
   whatsappRsvpLink: "https://wa.me/919178558111",
-  mapsCtaLink: "https://maps.app.goo.gl/CotNnjBZ9CPivikV7",
+  mapsCtaLink: "https://www.google.com/maps/place/Creative+Convention/@20.4304149,85.8713856,878m/data=!3m2!1e3!4b1!4m6!3m5!1s0x3a190db5d216c61d:0xc2da6f642323740b!8m2!3d20.4304149!4d85.8713856!16s%2Fg%2F11f57vbvgs?entry=ttu&g_ep=EgoyMDI2MTAwNy4wIKXMDSoASAFQAw%3D%3D",
   instagramCtaLink: "",
   buyNowLink: "",
 
@@ -68,7 +68,7 @@ module.exports = {
   eventCardBack: {
     "Mehendi":       { title: "Mehendi Night",      lines: ["Music, dance & henna artists", "Dress Code: Colourful Traditional", "Dinner served"] },
     "Haldi":         { title: "Haldi Ceremony",     lines: ["Wear yellow & have fun!", "Dress Code: Yellow / Pastels", "Snacks & refreshments"] },
-    "Mangana Handi": { title: "Mangana Handi",      lines: ["A traditional pre-wedding ritual", "Dress Code: Traditional", "Breakfast served"] },
+    "Managana Handi": { title: "Managana Handi",   lines: ["A traditional pre-wedding ritual", "Dress Code: Traditional", "Breakfast served"] },
     "Engagement":    { title: "Ring Ceremony",      lines: ["Join us as we exchange rings", "Dress Code: Traditional", "Dinner & celebrations"] },
     "Shaadi":        { title: "The Wedding",        lines: ["Pheras at the auspicious muhurat", "Dress Code: Traditional / Ethnic", "Dinner follows"] },
     "Reception":     { title: "Reception",          lines: ["An evening of music & blessings", "Dress Code: Formal / Ethnic", "Dinner & cocktails"] },

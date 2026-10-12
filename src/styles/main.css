@@ -28,6 +28,189 @@ body {
   object-fit: cover !important;
 }
 
+.framer-1cwb6w6,
+.framer-166gjrj,
+.framer-VcSlJ .framer-1jzdh0c,
+.framer-qkait7 {
+  display: none !important;
+}
+
+.date-reveal {
+  --date-olive: #696b36;
+  --date-ivory: #f3ecba;
+  --date-gold: #454824;
+  --date-ink: #454824;
+  width: 100%;
+  padding: clamp(48px, 8vw, 104px) 22px;
+  color: var(--date-ink);
+  background: transparent;
+  overflow: hidden;
+  animation: dateRevealEnter 800ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.date-reveal__inner {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.8fr) minmax(0, 1.2fr);
+  align-items: center;
+  gap: clamp(34px, 7vw, 88px);
+  width: min(100%, 980px);
+  margin: 0 auto;
+}
+
+.date-reveal__calendar {
+  padding: clamp(24px, 4vw, 42px);
+  color: var(--date-ink);
+  background: var(--date-ivory);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  box-shadow: 0 22px 55px rgba(25, 4, 12, 0.22);
+}
+
+.date-reveal__eyebrow {
+  margin: 0 0 10px;
+  color: var(--date-olive);
+  font-family: "Aboreto", serif;
+  font-size: 11px;
+  line-height: 1.4;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.date-reveal__calendar h2,
+.date-reveal__details h3 {
+  margin: 0;
+  font-family: "Cormorant Upright", "Cormorant", serif;
+  font-weight: 400;
+  text-align: center;
+}
+
+.date-reveal__calendar h2 {
+  margin-bottom: 22px;
+  font-size: 32px;
+}
+
+.date-reveal__week,
+.date-reveal__days {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  text-align: center;
+}
+
+.date-reveal__week {
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(69, 72, 36, 0.2);
+  color: var(--date-olive);
+  font-family: "Aboreto", serif;
+  font-size: 10px;
+}
+
+.date-reveal__days {
+  gap: 4px 0;
+  padding-top: 10px;
+}
+
+.date-reveal__day,
+.date-reveal__empty {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  aspect-ratio: 1;
+}
+
+.date-reveal__day {
+  position: relative;
+  z-index: 0;
+  font-family: "Cormorant", serif;
+  font-size: 17px;
+}
+
+.date-reveal__day.is-special {
+  color: white;
+  font-weight: 700;
+}
+
+.date-reveal__day.is-special::before {
+  position: absolute;
+  z-index: -1;
+  width: 34px;
+  height: 34px;
+  content: "";
+  background: var(--date-olive);
+  border-radius: 50%;
+  animation: dateHeartPulse 2.4s ease-in-out infinite;
+}
+
+.date-reveal__day.is-special::after {
+  position: absolute;
+  top: -2px;
+  right: 1px;
+  color: #a98042;
+  content: "\2665";
+  font-size: 12px;
+  transform: rotate(12deg);
+}
+
+.date-reveal__details {
+  min-width: 0;
+  animation: dateRevealEnter 900ms 120ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.date-reveal__details .date-reveal__eyebrow {
+  color: var(--date-gold);
+}
+
+.date-reveal__details h3 {
+  font-size: clamp(40px, 5.5vw, 68px);
+}
+
+.date-reveal__countdown {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 24px;
+  border-top: 1px solid rgba(243, 236, 186, 0.35);
+  border-bottom: 1px solid rgba(243, 236, 186, 0.35);
+}
+
+.date-reveal__unit {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  min-width: 0;
+  padding: 16px 4px;
+}
+
+.date-reveal__value {
+  display: block;
+  font-family: "Cormorant Upright", "Cormorant", serif;
+  font-size: clamp(28px, 4vw, 45px);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  transform-origin: center;
+}
+
+.date-reveal__value.is-changing {
+  animation: dateNumberFlip 350ms ease-out;
+}
+
+.date-reveal__label {
+  color: var(--date-gold);
+  font-family: "Aboreto", serif;
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+@keyframes dateRevealEnter {
+  from { opacity: 0; transform: translateY(22px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes dateHeartPulse {
+  50% { box-shadow: 0 0 0 7px rgba(220, 221, 166, 0.18); }
+}
+
+@keyframes dateNumberFlip {
+  50% { opacity: 0.55; transform: rotateX(82deg) translateY(-2px); }
+}
+
 .framer-679jd,
 .framer-sif4cl,
 .framer-1w6qfi3,
@@ -37,6 +220,25 @@ body {
   width: 100% !important;
   height: 100% !important;
   aspect-ratio: unset !important;
+}
+
+@media (min-width: 810px) {
+  .framer-1ozbtfd-container {
+    left: 50% !important;
+    width: min(691px, 100%) !important;
+    transform: translateX(-50%) !important;
+    overflow: hidden !important;
+  }
+}
+
+@media (max-width: 809.98px) {
+  .framer-1ozbtfd-container {
+    inset: 14px !important;
+    width: auto !important;
+    height: auto !important;
+    overflow: hidden !important;
+    border-radius: 24px;
+  }
 }
 
 /* ── Event card 3-D flip ──────────────────────────────────── */
@@ -260,8 +462,154 @@ body {
   .ecf-btn            { min-height: 42px; font-size: 16px; padding: 0 24px; }
 }
 
+@media (max-width: 809.98px) {
+  .framer-UVCK8.framer-140rle5 {
+    width: 100% !important;
+    max-width: 100%;
+  }
+
+  .framer-UVCK8 .framer-1xxttys-container,
+  .framer-UVCK8 .framer-1mhegaa-container,
+  .framer-UVCK8 .framer-y390rh-container,
+  .framer-UVCK8 .framer-8j9rab-container,
+  .framer-UVCK8 .framer-15hmep-container,
+  .framer-UVCK8 .framer-v371mv-container {
+    width: 100% !important;
+    max-width: 100%;
+  }
+
+  .date-reveal {
+    padding: 52px 18px 60px;
+  }
+
+  .date-reveal__inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 34px;
+    width: min(100%, 430px);
+  }
+
+  .date-reveal__calendar {
+    padding: 24px clamp(18px, 7vw, 32px);
+  }
+
+  .date-reveal__details h3 {
+    font-size: 46px;
+  }
+
+}
+
+/* ── Things to Know — background image only ───────────────── */
+.framer-jcebrp {
+  position: relative !important;
+  height: 60vw !important;
+  max-height: 700px !important;
+  min-height: 320px !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+}
+
+/* Hide all Framer-rendered inner content */
+.framer-jcebrp .framer-1ytz0ta {
+  display: none !important;
+}
+
+/* Countdown heading overlay */
+.ttk-countdown-heading {
+  position: absolute;
+  top: 38%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  margin: 0;
+  font-family: "Aboreto", sans-serif;
+  font-size: clamp(22px, 4vw, 42px);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-align: center;
+  color: #454824;
+  white-space: nowrap;
+}
+
+@media (max-width: 809.98px) {
+  .ttk-countdown-heading {
+    font-size: clamp(18px, 5.5vw, 28px);
+    top: 35%;
+  }
+}
+
+/* Show background image via pseudo-element */
+.framer-jcebrp::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('../../assets/images/background/2dFaPNHiZWIx3VvP26NqORM2vMY.png');
+  background-size: cover;
+  background-position: center;
+  z-index: 1;
+}
+
+.ttk-bg-wrapper { display: none !important; }
+
+@media (max-width: 809.98px) {
+  .framer-jcebrp {
+    height: 100vw !important;
+    max-height: 500px !important;
+    min-height: 260px !important;
+    padding: 0 !important;
+  }
+}
+
+/* ── Presence text in footer lanterns section ────────────── */
+.ttk-presence-text {
+  position: relative;
+  z-index: 2;
+  margin: 0 0 60px;
+  font-family: "Aboreto", sans-serif;
+  font-size: clamp(16px, 3.5vw, 28px);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-align: center;
+  color: #f5c842;
+  text-shadow:
+    0 0 8px rgba(245, 200, 66, 0.9),
+    0 0 20px rgba(245, 200, 66, 0.6),
+    0 0 40px rgba(212, 160, 23, 0.4),
+    0 2px 6px rgba(0, 0, 0, 0.6);
+  animation: ttk-glow-pulse 2.8s ease-in-out infinite;
+}
+
+@keyframes ttk-glow-pulse {
+  0%, 100% {
+    text-shadow:
+      0 0 8px rgba(245, 200, 66, 0.9),
+      0 0 20px rgba(245, 200, 66, 0.6),
+      0 0 40px rgba(212, 160, 23, 0.4),
+      0 2px 6px rgba(0, 0, 0, 0.6);
+  }
+  50% {
+    text-shadow:
+      0 0 14px rgba(245, 200, 66, 1),
+      0 0 35px rgba(245, 200, 66, 0.8),
+      0 0 65px rgba(212, 160, 23, 0.6),
+      0 2px 6px rgba(0, 0, 0, 0.6);
+  }
+}
+
+@media (max-width: 809.98px) {
+  .ttk-presence-text {
+    font-size: clamp(14px, 4.5vw, 20px);
+    padding: 0 20px;
+    margin: 0 0 40px;
+  }
+}
+
 /* ── Reduced motion ───────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .framer-eqI5A { transition-duration: 0.01s !important; }
   .ecf-hint b   { animation: none; }
+  .date-reveal,
+  .date-reveal__details,
+  .date-reveal__day.is-special::before,
+  .date-reveal__value.is-changing,
+  .ttk-presence-text { animation: none; }
 }
