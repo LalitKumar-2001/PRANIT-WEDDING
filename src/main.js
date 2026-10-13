@@ -117,7 +117,7 @@ function initCountdownHeading() {
     const section = document.querySelector('.framer-jcebrp');
     if (!section || section.querySelector('.ttk-countdown-heading')) return;
     const el = document.createElement('p');
-    el.className = 'ttk-countdown-heading';
+    el.className = 'framer-text ttk-countdown-heading';
     el.textContent = 'Countdown Begins...';
     section.appendChild(el);
   };
@@ -140,9 +140,9 @@ function init() {
   else initMapsCtaLink('https://www.google.com/maps/place/Creative+Convention/@20.4304149,85.8713856,878m/data=!3m2!1e3!4b1!4m6!3m5!1s0x3a190db5d216c61d:0xc2da6f642323740b!8m2!3d20.4304149!4d85.8713856!16s%2Fg%2F11f57vbvgs?entry=ttu&g_ep=EgoyMDI2MTAwNy4wIKXMDSoASAFQAw%3D%3D');
   if (config.events) initVenueOverrides(config.events);
   else initVenueOverrides([
-    { event: 'Haldi',          venue: 'MM Villa, Trisulia, Kataka' },
-    { event: 'Mehendi',        venue: 'MM Villa, Trisulia, Kataka' },
-    { event: 'Reception',      venue: 'MM Villa, Trisulia, Kataka' },
+    { event: 'Haldi',          venue: 'PritiPrakash Niwas, Khannagar, Kataka' },
+    { event: 'Mehendi',        venue: 'PritiPrakash Niwas, Khannagar, Kataka' },
+    { event: 'Reception',      venue: 'PritiPrakash Niwas, Khannagar, Kataka' },
     { event: 'Mangana Handi', venue: 'PritiPrakash Niwas, Khannagar, Kataka' },
     { event: 'Shaadi',         venue: 'Creative Convention, Balikuda, Kataka' }
   ]);
@@ -154,7 +154,8 @@ function init() {
     initEventCards(
       config.eventCardBack,
       `${config.name1Display} & ${config.name2Display}`,
-      config.eventHours ?? 3
+      config.eventHours ?? 3,
+      config.events ?? []
     );
   }
 }

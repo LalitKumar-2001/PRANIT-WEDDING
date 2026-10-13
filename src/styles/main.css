@@ -17,16 +17,6 @@ body {
 }
 
 /* ── Gallery frame image fix ──────────────────────────────── */
-.framer-4rlk9i > div[data-framer-background-image-wrapper] img {
-  position: absolute !important;
-  top: 50% !important;
-  left: 50% !important;
-  width: 150% !important;
-  height: 66.6667% !important;
-  max-width: none !important;
-  transform: translate(-50%, -50%) rotate(90deg) !important;
-  object-fit: cover !important;
-}
 
 .framer-1cwb6w6,
 .framer-166gjrj,
@@ -69,7 +59,7 @@ body {
   margin: 0 0 10px;
   color: var(--date-olive);
   font-family: "Aboreto", serif;
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.4;
   text-align: center;
   text-transform: uppercase;
@@ -166,8 +156,8 @@ body {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   margin-top: 24px;
-  border-top: 1px solid rgba(243, 236, 186, 0.35);
-  border-bottom: 1px solid rgba(243, 236, 186, 0.35);
+  border-top: 3px solid rgba(45, 8, 8, 0.35);
+  border-bottom: 3px solid rgba(45, 8, 8, 0.35);
 }
 
 .date-reveal__unit {
@@ -181,7 +171,7 @@ body {
 .date-reveal__value {
   display: block;
   font-family: "Cormorant Upright", "Cormorant", serif;
-  font-size: clamp(28px, 4vw, 45px);
+  font-size: clamp(35px, 4vw, 45px);
   font-variant-numeric: tabular-nums;
   line-height: 1;
   transform-origin: center;
@@ -194,7 +184,7 @@ body {
 .date-reveal__label {
   color: var(--date-gold);
   font-family: "Aboreto", serif;
-  font-size: 9px;
+  font-size: 13px;
   text-transform: uppercase;
 }
 
@@ -211,6 +201,11 @@ body {
   50% { opacity: 0.55; transform: rotateX(82deg) translateY(-2px); }
 }
 
+/* Event card time text: 14px → 15px */
+.framer-g4ggot p {
+  --framer-font-size: 15px !important;
+}
+
 .framer-679jd,
 .framer-sif4cl,
 .framer-1w6qfi3,
@@ -222,23 +217,27 @@ body {
   aspect-ratio: unset !important;
 }
 
-@media (min-width: 810px) {
-  .framer-1ozbtfd-container {
-    left: 50% !important;
-    width: min(691px, 100%) !important;
-    transform: translateX(-50%) !important;
-    overflow: hidden !important;
-  }
+/* ── Couple image carousel — fill frame inner window ─────── */
+
+/* Frame container must clip the carousel */
+.framer-4rlk9i {
+  overflow: hidden !important;
 }
 
-@media (max-width: 809.98px) {
-  .framer-1ozbtfd-container {
-    inset: 14px !important;
-    width: auto !important;
-    height: auto !important;
-    overflow: hidden !important;
-    border-radius: 24px;
-  }
+/* Carousel fills the inner opening of the frame image.
+   Frame PNG (506×758): inner window starts ~17% from top,
+   ~12% from left/right, ends ~12% from bottom.
+   These percentages apply to both desktop and phone since
+   the same proportional frame image is used. */
+.framer-1ozbtfd-container {
+  position: absolute !important;
+  top: 7% !important;
+  left: 12% !important;
+  right: 12% !important;
+  bottom: 6% !important;
+  width: auto !important;
+  height: auto !important;
+  z-index: 0 !important;
 }
 
 /* ── Event card 3-D flip ──────────────────────────────────── */
@@ -515,7 +514,7 @@ body {
 /* ── Things to Know — background image only ───────────────── */
 .framer-jcebrp {
   position: relative !important;
-  height: 60vw !important;
+  height: 30vw !important;
   max-height: 700px !important;
   min-height: 320px !important;
   overflow: hidden !important;
@@ -535,19 +534,24 @@ body {
   transform: translate(-50%, -50%);
   z-index: 2;
   margin: 0;
-  font-family: "Aboreto", sans-serif;
-  font-size: clamp(22px, 4vw, 42px);
-  font-weight: 400;
-  letter-spacing: 0.06em;
-  text-align: center;
-  color: #454824;
+  --font-selector: R0Y7QWJvcmV0by1yZWd1bGFy;
+  --framer-font-family: "Aboreto", sans-serif;
+  --framer-font-size: 30px;
+  --framer-line-height: 115.74%;
+  --framer-text-alignment: center;
+  --framer-text-color: #454824;
+  font-family: var(--framer-font-family);
+  font-size: var(--framer-font-size);
+  line-height: var(--framer-line-height);
+  text-align: var(--framer-text-alignment);
+  color: var(--framer-text-color);
   white-space: nowrap;
 }
 
 @media (max-width: 809.98px) {
   .ttk-countdown-heading {
-    font-size: clamp(18px, 5.5vw, 28px);
-    top: 35%;
+    --framer-font-size: 40px;
+    top: 65%;
   }
 }
 
@@ -566,7 +570,7 @@ body {
 
 @media (max-width: 809.98px) {
   .framer-jcebrp {
-    height: 100vw !important;
+    height: 30vw !important;
     max-height: 500px !important;
     min-height: 260px !important;
     padding: 0 !important;

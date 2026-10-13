@@ -90,16 +90,30 @@ function createFrontHint() {
  * @param {string} coupleName - Couple names for calendar event
  * @param {number} eventHours - Default event duration in hours
  */
-export function initEventCards(backData, coupleName, eventHours = 3) {
+export function initEventCards(backData, coupleName, eventHours = 3, eventsConfig = []) {
   // Allow backData keyed by either the overridden display name or the Framer original name
   const FRAMER_NAME_MAP = { 'Sangeet': 'Reception' };
+  // Build mapsLink lookup from eventsConfig keyed by Framer event name
+  const mapsLinkMap = Object.fromEntries(
+    eventsConfig.map(e => [e.event, e.mapsLink])
+  );
 
   document.querySelectorAll('.framer-eqI5A').forEach(card => {
     const eventName = getText(card, '.framer-d9o4fp');
     const lookupName = backData[eventName] ? eventName : (FRAMER_NAME_MAP[eventName] ?? eventName);
     if (!backData[lookupName]) return;
 
-    const mapsLink = card.closest('[data-maps-link]')?.dataset.mapsLink ?? '';
+    // Resolve mapsLink: from config by display name, or from Framer-rendered anchor
+    const framerAnchor = card.querySelector('.framer-1hdt68x a');
+    const mapsLink = mapsLinkMap[eventName]
+      ?? mapsLinkMap[lookupName]
+      ?? framerAnchor?.href
+      ?? '';
+
+    // Stop the Framer-rendered "See the route" link from flipping the card
+    if (framerAnchor) {
+      framerAnchor.addEventListener('click', e => e.stopPropagation());
+    }
 
     card.appendChild(createFrontHint());
     card.appendChild(createBackFace(card, backData, lookupName, coupleName, eventHours, mapsLink));
@@ -109,11 +123,14 @@ export function initEventCards(backData, coupleName, eventHours = 3) {
     card.setAttribute('role', 'button');
     card.setAttribute('aria-label', `${eventName} event card – activate to see details`);
 
-    // Toggle flip on click/keyboard
-    const toggle = () => card.classList.toggle('is-flipped');
+    // Toggle flip on click/keyboard — but not when clicking a link or button
+    const toggle = e => {
+      if (e.target.closest('a, button')) return;
+      card.classList.toggle('is-flipped');
+    };
     card.addEventListener('click', toggle);
     card.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.classList.toggle('is-flipped'); }
     });
   });
 }

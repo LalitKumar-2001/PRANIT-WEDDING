@@ -35,9 +35,9 @@ module.exports = {
   // ── Events (6 cards) ────────────────────────────────────
   events: [
     { event: "Engagement", date: "Friday, 9th Sep 2026", venue: "Red Mirchi, Trisulia", time: "12pm Onwards", mapsLink: "https://maps.app.goo.gl/CotNnjBZ9CPivikV7" },
-    { event: "Mehendi", date: "Friday, 4th Dec 2026", venue: "MM Villa, Trisulia, Kataka", time: "3pm Onwards", mapsLink: "https://maps.app.goo.gl/nztDZypZiyZP76Kq7" },
-    { event: "Sangeet", date: "Friday, 4th Dec 2026", venue: "MM Villa, Trisulia, Kataka", time: "5pm Onwards", mapsLink: "https://maps.app.goo.gl/nztDZypZiyZP76Kq7" },
-    { event: "Haldi", date: "Saturday, 5th Dec 2026", venue: "MM Villa, Trisulia, Kataka", time: "11am Onwards", mapsLink: "https://maps.app.goo.gl/nztDZypZiyZP76Kq7" },
+    { event: "Mehendi", date: "Friday, 4th Dec 2026", venue: "PritiPrakash Niwas, Khannagar, Kataka", time: "3pm Onwards", mapsLink: "https://maps.app.goo.gl/nztDZypZiyZP76Kq7" },
+    { event: "Sangeet", date: "Friday, 4th Dec 2026", venue: "PritiPrakash Niwas, Khannagar, Kataka", time: "5pm Onwards", mapsLink: "https://maps.app.goo.gl/nztDZypZiyZP76Kq7" },
+    { event: "Haldi", date: "Saturday, 5th Dec 2026", venue: "PritiPrakash Niwas, Khannagar, Kataka", time: "11am Onwards", mapsLink: "https://maps.app.goo.gl/nztDZypZiyZP76Kq7" },
     { event: "Mangana Handi", date: "Sunday, 6th Dec 2026", venue: "PritiPrakash Niwas, Khannagar, Kataka", time: "9am Onwards", mapsLink: "https://maps.app.goo.gl/nztDZypZiyZP76Kq7" },
     { event: "Shaadi", date: "Sunday, 6th Dec 2026", venue: "Creative Convention, Balikuda, Kataka", time: "7pm Onwards", mapsLink: "https://maps.app.goo.gl/tbCjbczNkigvtUYG8" }
   
