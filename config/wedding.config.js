@@ -25,7 +25,7 @@ module.exports = {
 
   // ── Groom's family ──────────────────────────────────────
   groomBlessingOf: "With the heavenly blessings of ",
-  groomGrandparents: "Late Skakuntala Devi & Late Tribeni Prasad Gupta",
+  groomGrandparents: "Late Shakuntala Devi & Late Tribeni Prasad Gupta",
   groomParents: "Mrs. Pritilaxmi Gupta & Mr. Om Prakash Gupta",
 
   // ── Bride's family ──────────────────────────────────────
