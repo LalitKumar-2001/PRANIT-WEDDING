@@ -16,7 +16,7 @@ export function initXxx(param) { ... }
 ```
 
 ### Guard-and-return Pattern
-Every `initXxx()` function queries its required DOM element first and returns early if absent. This prevents errors when Framer's HTML changes.
+Every `initXxx()` function queries its required DOM element first and returns early if absent.
 
 ```js
 export function initMusicPlayer(src) {
@@ -27,7 +27,7 @@ export function initMusicPlayer(src) {
 ```
 
 ### MutationObserver Injection Pattern
-For sections that Framer JS re-renders at runtime, content is injected via `MutationObserver` with a duplicate guard. This is the required pattern for any DOM injection into Framer-managed elements.
+For **all** content that Framer JS re-renders at runtime, use `MutationObserver` with a value guard. This is the **mandatory** pattern — never assume SSR patches survive Framer's runtime re-render.
 
 ```js
 function initPresenceText() {
@@ -36,7 +36,7 @@ function initPresenceText() {
     if (!section || section.querySelector('.ttk-presence-text')) return;
     const el = document.createElement('p');
     el.className = 'ttk-presence-text';
-    el.textContent = 'Awaiting your presence - PritiPrakash Family';
+    el.textContent = 'Awaiting your presence - Sasmal Family';
     section.appendChild(el);
   };
   inject();
@@ -44,8 +44,20 @@ function initPresenceText() {
 }
 ```
 
+### Target the Deepest Styled Element
+When overriding Framer-rendered text, **always target the leaf element** (`h3`, `h2`, or `p`) that carries Framer's inline CSS styles — never the outer wrapper `div`. Setting `textContent` on a parent strips all child elements including the styled leaf.
+
+```js
+// ✅ Correct — preserves inline font styles on h3
+const target = wrapper.querySelector('h3, h2') ?? wrapper.querySelector('p') ?? wrapper;
+if (target.textContent.trim() !== val) target.textContent = val;
+
+// ❌ Wrong — destroys the h3 and all its inline styles
+const p = wrapper.querySelector('p') ?? wrapper;
+p.textContent = val;
+```
+
 ### Named Constants for Magic Numbers
-Time/math constants are extracted to named `const` at module scope:
 
 ```js
 const MS_PER_SECOND = 1000;
@@ -55,7 +67,6 @@ const MS_PER_DAY    = 86400000;
 ```
 
 ### JSDoc on Every Exported Function
-All exported functions carry `@param` and `@returns` JSDoc:
 
 ```js
 /**
@@ -72,7 +83,7 @@ export function parseDate(str) { ... }
 
 | Item | Convention | Example |
 |---|---|---|
-| Functions | camelCase verb-noun | `initEventCards`, `downloadCalendarFile`, `createBackFace` |
+| Functions | camelCase verb-noun | `initEventCards`, `initRepurposedCards`, `initCoupleNameDisplay` |
 | CSS state classes | kebab-case with `is-` prefix | `.is-flipped`, `.is-active`, `.is-visible` |
 | CSS component classes | `ecf-` prefix for event card elements | `.ecf-btn`, `.ecf-hint`, `.ecf-actions` |
 | CSS injected element classes | `ttk-` prefix for hand-injected overlays | `.ttk-countdown-heading`, `.ttk-presence-text` |
@@ -87,35 +98,39 @@ export function parseDate(str) { ... }
 `main.js` guards every feature call with a config check:
 
 ```js
-if (config.countdownDate) initCountdown(config.countdownDate);
+if (config.countdownDate) initDateReveal(config.countdownDate, ...);
 if (config.musicUrl)      initMusicPlayer(config.musicUrl);
 if (config.eventCardBack) initEventCards(config.eventCardBack, ...);
+if (config.events)        initEventFieldOverrides(config.events);
 ```
-Never assume a config key exists — always guard or use `?? default`.
+
+### Framer Prop Swap Pattern
+Several Framer components have props hardcoded **swapped** at their call sites in the `.mjs` bundle. The fix is always a `MutationObserver` in `main.js` that targets the leaf element:
+
+| Component | Swap | Fix function |
+|---|---|---|
+| Hero names (`framer-1if6ejn-container`) | `q_Mw9gntU`=PRITI, `BGQVPX9uc`=ANKIT | `initCoupleNameDisplay()` |
+| Invite names (`framer-igjlsv-container`) | `tml4boL7l`=Priti, `dJVbfF52C`=Ankit | `initCoupleNameDisplay()` |
+| Event card names (`b0Odmcs_Z`) | 4 of 6 cards wrong | `initRepurposedCards()` |
+| "bride and groom" heading (`framer-ewzo4f`) | hardcoded string | `initGroomAndBrideHeading()` |
 
 ### CSS Suppression of Framer-Rendered Content
-Framer JS re-renders sections at runtime and cannot be stopped. To hide unwanted Framer content, use `display: none !important` on the inner wrapper, then provide the replacement visually via CSS pseudo-elements or injected DOM nodes:
 
 ```css
-/* Hide Framer-rendered inner content */
 .framer-jcebrp .framer-1ytz0ta {
   display: none !important;
 }
-
-/* Replace with background image via pseudo-element */
 .framer-jcebrp::before {
   content: '';
   position: absolute;
   inset: 0;
   background-image: url('assets/images/background/2dFaPNHiZWIx3VvP26NqORM2vMY.png');
   background-size: cover;
-  background-position: center;
   z-index: 1;
 }
 ```
 
 ### CSS-Class State Machine
-Interactivity is expressed entirely through CSS class toggles; no inline style mutations for state:
 
 ```js
 card.classList.toggle('is-flipped');
@@ -124,7 +139,6 @@ e.target.classList.add('is-visible');
 ```
 
 ### IntersectionObserver Over Scroll Events
-Both scroll animations and active-nav detection use `IntersectionObserver`. Never add `scroll` event listeners for these purposes.
 
 ```js
 const observer = new IntersectionObserver(callback, { threshold: 0.15 });
@@ -132,7 +146,6 @@ document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
 ```
 
 ### One-Time Event Listeners
-Autoplay and similar one-shot interactions use `{ once: true }`:
 
 ```js
 document.addEventListener('click', play, { once: true });
@@ -140,7 +153,6 @@ document.addEventListener('touchstart', play, { once: true });
 ```
 
 ### Blob Download Pattern
-`.ics` file downloads use `Blob` + `URL.createObjectURL` with immediate revocation:
 
 ```js
 const blob = new Blob([icsContent], { type: 'text/calendar' });
@@ -159,18 +171,16 @@ URL.revokeObjectURL(link.href);
 ### Layer Separation
 - Framer's CSS stays inline in `index.html` — never touch it
 - All custom CSS lives in `src/styles/main.css`
-- Framer class overrides use `!important` only when necessary to beat Framer's specificity
+- Framer class overrides use `!important` only when necessary
 
 ### ttk- Prefix for Injected Elements
-All hand-injected overlay elements use the `ttk-` CSS class prefix to avoid collisions with Framer classes:
 
 ```css
-.ttk-countdown-heading { ... }  /* "Countdown Begins..." over floral bg */
-.ttk-presence-text { ... }      /* Glowing golden text in footer section */
+.ttk-countdown-heading { ... }
+.ttk-presence-text { ... }
 ```
 
 ### CSS Custom Properties for Card Geometry
-Card dimensions are centralised as custom properties and overridden per breakpoint:
 
 ```css
 .ecf-front, .event-card-back {
@@ -182,7 +192,19 @@ Card dimensions are centralised as custom properties and overridden per breakpoi
 }
 ```
 
+### Event Card CSS Order (all 6 visible)
+
+```css
+.framer-1xxttys-container { order: 1; } /* Mehendi      */
+.framer-v371mv-container  { order: 2; } /* Sangeet      */
+.framer-1mhegaa-container { order: 3; } /* Haldi        */
+.framer-y390rh-container  { order: 4; } /* Mangana Handi */
+.framer-15hmep-container  { order: 5; } /* Baarat       */
+.framer-8j9rab-container  { order: 6; } /* Reception    */
+```
+
 ### Responsive Breakpoints
+
 | Breakpoint | Range |
 |---|---|
 | Phone | `max-width: 809.98px` |
@@ -190,7 +212,6 @@ Card dimensions are centralised as custom properties and overridden per breakpoi
 | Desktop | `min-width: 1200px` (implicit) |
 
 ### Accessibility in CSS
-Always include `:focus-visible` styles and `@media (prefers-reduced-motion: reduce)` overrides. All animations (card flip, glow pulse, date reveal) must be listed in the reduced-motion block:
 
 ```css
 @media (prefers-reduced-motion: reduce) {
@@ -205,9 +226,9 @@ Always include `:focus-visible` styles and `@media (prefers-reduced-motion: redu
 ## Security Practices
 
 - All user-facing strings inserted via `innerHTML` are passed through `escapeHtml()` from `src/utils/dom.js`
-- Text injected via `textContent` (e.g. `ttk-countdown-heading`, `ttk-presence-text`) is safe by default — no escaping needed
+- Text injected via `textContent` is safe by default
 - External links always include `rel="noopener"` and `target="_blank"`
-- ICS content escapes `,`, `;`, `\` per RFC 5545 before embedding
+- ICS content escapes `,`, `;`, `\` per RFC 5545
 
 ---
 
@@ -215,8 +236,9 @@ Always include `:focus-visible` styles and `@media (prefers-reduced-motion: redu
 
 - Do not edit `index.html` manually — use `apply-config.js`
 - Do not edit `assets/js/*.mjs` — these are Framer build artefacts
-- Do not add `scroll` event listeners for scroll-position detection — use `IntersectionObserver`
+- Do not add `scroll` event listeners — use `IntersectionObserver`
 - Do not use default exports in `src/`
 - Do not mutate inline styles for component state — toggle CSS classes instead
-- Do not add runtime npm dependencies — the project is intentionally zero-dependency at runtime
-- Do not attempt to remove Framer-rendered content by editing static HTML — Framer JS re-renders it at runtime; use CSS `display: none !important` instead
+- Do not add runtime npm dependencies
+- Do not set `textContent` on a Framer wrapper `div` — target the leaf `h3`/`h2`/`p` element
+- Do not attempt to remove Framer-rendered content by editing static HTML — use CSS `display: none !important`

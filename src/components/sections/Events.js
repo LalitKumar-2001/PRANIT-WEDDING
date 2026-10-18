@@ -91,8 +91,18 @@ function createFrontHint() {
  * @param {number} eventHours - Default event duration in hours
  */
 export function initEventCards(backData, coupleName, eventHours = 3, eventsConfig = []) {
-  // Allow backData keyed by either the overridden display name or the Framer original name
-  const FRAMER_NAME_MAP = { 'Sangeet': 'Reception' };
+  // Framer's hardcoded b0Odmcs_Z values → config backData keys
+  // (after initRepurposedCards mutation fires the displayed name matches the key directly,
+  //  but we also map the original Framer names as fallback for the first render pass)
+  const FRAMER_NAME_MAP = {
+    'Engagement':    'Mehendi',       // framer-1xxttys before mutation
+    'Mehendi':       'Mehendi',
+    'Mangana Handi': 'Mangana Handi',
+    'Sangeet':       'Sangeet',
+    'Reception':     'Reception',
+    'Haldi':         'Haldi',
+    'Baarat':        'Baarat',
+  };
   // Build mapsLink lookup from eventsConfig keyed by Framer event name
   const mapsLinkMap = Object.fromEntries(
     eventsConfig.map(e => [e.event, e.mapsLink])

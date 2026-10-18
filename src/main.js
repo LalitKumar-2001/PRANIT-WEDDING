@@ -6,7 +6,6 @@ import { initDateReveal } from './components/ui/Countdown.js';
 import { initMusicPlayer } from './components/ui/MusicPlayer.js';
 import { initEventCards } from './components/sections/Events.js';
 import { initNavigation } from './components/layout/Navigation.js';
-import { initWatermark } from './components/layout/Watermark.js';
 import { initScrollAnimations } from './utils/animation.js';
 import { initSmoothScroll } from './utils/scroll.js';
 import { getConfig } from './utils/config-loader.js';
@@ -49,38 +48,44 @@ function initOptimizedImages() {
   });
 }
 
-function initVenueOverrides(events) {
+function initEventFieldOverrides(events) {
   if (!events?.length) return;
-  const venueMap = Object.fromEntries(events.map(e => [e.event, e.venue]));
+  const byName = Object.fromEntries(events.map(e => [e.event, e]));
   const inject = () => {
     document.querySelectorAll('.framer-eqI5A').forEach(card => {
       const nameEl = card.querySelector('.framer-d9o4fp');
-      const venueEl = card.querySelector('.framer-1lwecf7');
-      if (!nameEl || !venueEl) return;
-      const eventName = nameEl.textContent.trim();
-      const venue = venueMap[eventName];
-      if (venue && venueEl.textContent.trim() !== venue) {
-        const p = venueEl.querySelector('p') ?? venueEl;
-        p.textContent = venue;
-      }
+      if (!nameEl) return;
+      const ev = byName[nameEl.textContent.trim()];
+      if (!ev) return;
+      [[ '.framer-inj5oz', ev.date ], [ '.framer-1lwecf7', ev.venue ], [ '.framer-g4ggot', ev.time ]]
+        .forEach(([sel, val]) => {
+          const el = card.querySelector(sel);
+          if (!el) return;
+          const target = el.querySelector('p') ?? el;
+          if (target.textContent.trim() !== val) target.textContent = val;
+        });
     });
   };
   inject();
   new MutationObserver(inject).observe(document.body, { childList: true, subtree: true });
 }
 
-function initEventNameOverrides() {
-  const nameOverrides = { 'Reception': 'Sangeet' };
+function initRepurposedCards() {
+  // Framer JS hardcodes these event names in the .mjs bundle — override all mismatches
+  const cards = [
+    { sel: '.framer-1xxttys-container', name: 'Mehendi' },
+    { sel: '.framer-y390rh-container',  name: 'Mangana Handi' },
+    { sel: '.framer-v371mv-container',  name: 'Sangeet' },
+    { sel: '.framer-8j9rab-container',  name: 'Reception' },
+  ];
   const inject = () => {
-    document.querySelectorAll('.framer-eqI5A').forEach(card => {
-      const nameEl = card.querySelector('.framer-d9o4fp');
+    cards.forEach(({ sel, name }) => {
+      const container = document.querySelector(sel);
+      if (!container) return;
+      const nameEl = container.querySelector('.framer-d9o4fp');
       if (!nameEl) return;
-      const current = nameEl.textContent.trim();
-      const override = nameOverrides[current];
-      if (override) {
-        const p = nameEl.querySelector('p') ?? nameEl;
-        if (p.textContent.trim() !== override) p.textContent = override;
-      }
+      const target = nameEl.querySelector('p') ?? nameEl;
+      if (target.textContent.trim() !== name) target.textContent = name;
     });
   };
   inject();
@@ -105,8 +110,43 @@ function initPresenceText() {
     if (!section || section.querySelector('.ttk-presence-text')) return;
     const el = document.createElement('p');
     el.className = 'ttk-presence-text';
-    el.textContent = 'Awaiting your presence - PritiPrakash Family';
+    el.textContent = 'Awaiting your presence - Sasmal Family';
     section.appendChild(el);
+  };
+  inject();
+  new MutationObserver(inject).observe(document.body, { childList: true, subtree: true });
+}
+
+function initCoupleNameDisplay(name1Display, name2Display, name1Hero, name2Hero) {
+  const setDeepText = (container, sel, val) => {
+    const wrapper = container.querySelector(sel);
+    if (!wrapper) return;
+    // Framer renders: wrapper > p > h3 (or h2) with inline styles — target the deepest element
+    const target = wrapper.querySelector('h3, h2') ?? wrapper.querySelector('p') ?? wrapper;
+    if (target.textContent.trim() !== val) target.textContent = val;
+  };
+  const inject = () => {
+    const hero = document.querySelector('.framer-1if6ejn-container');
+    if (hero) {
+      setDeepText(hero, '.framer-ti6z94', name1Hero);
+      setDeepText(hero, '.framer-8cgar', name2Hero);
+    }
+    const invite = document.querySelector('.framer-igjlsv-container');
+    if (invite) {
+      setDeepText(invite, '.framer-11ag0sw', name1Display);
+      setDeepText(invite, '.framer-13k4cyv', name2Display);
+    }
+  };
+  inject();
+  new MutationObserver(inject).observe(document.body, { childList: true, subtree: true });
+}
+
+function initGroomAndBrideHeading() {
+  const inject = () => {
+    const el = document.querySelector('.framer-ewzo4f');
+    if (!el) return;
+    const target = el.querySelector('p') ?? el;
+    if (target.textContent.trim() !== 'groom and bride') target.textContent = 'groom and bride';
   };
   inject();
   new MutationObserver(inject).observe(document.body, { childList: true, subtree: true });
@@ -129,26 +169,25 @@ function init() {
   const config = getConfig();
 
   initOptimizedImages();
-  initWatermark();
   initSmoothScroll();
   initScrollAnimations();
   initNavigation();
   initCountdownHeading();
   initPresenceText();
-  initEventNameOverrides();
+  initGroomAndBrideHeading();
+  initCoupleNameDisplay(
+    config.name1Display ?? 'Ankit',
+    config.name2Display ?? 'Priti',
+    config.name1 ?? 'ANKIT',
+    config.name2 ?? 'PRITI'
+  );
+  initRepurposedCards();
   if (config.mapsCtaLink) initMapsCtaLink(config.mapsCtaLink);
-  else initMapsCtaLink('https://www.google.com/maps/place/Creative+Convention/@20.4304149,85.8713856,878m/data=!3m2!1e3!4b1!4m6!3m5!1s0x3a190db5d216c61d:0xc2da6f642323740b!8m2!3d20.4304149!4d85.8713856!16s%2Fg%2F11f57vbvgs?entry=ttu&g_ep=EgoyMDI2MTAwNy4wIKXMDSoASAFQAw%3D%3D');
-  if (config.events) initVenueOverrides(config.events);
-  else initVenueOverrides([
-    { event: 'Haldi',          venue: 'PritiPrakash Niwas, Khannagar, Kataka' },
-    { event: 'Mehendi',        venue: 'PritiPrakash Niwas, Khannagar, Kataka' },
-    { event: 'Reception',      venue: 'PritiPrakash Niwas, Khannagar, Kataka' },
-    { event: 'Mangana Handi', venue: 'PritiPrakash Niwas, Khannagar, Kataka' },
-    { event: 'Shaadi',         venue: 'Creative Convention, Balikuda, Kataka' }
-  ]);
+  else initMapsCtaLink('https://www.google.com/maps/place/Das+gadia+mini+stadium/@20.3843891,85.8560771,110m/data=!3m1!1e3!4m6!3m5!1s0x3a190d9d527b205b:0x90876bbc086aae85!8m2!3d20.3843891!4d85.8563757!16s%2Fg%2F11srtvzpml?entry=ttu&g_ep=EgoyMDI2MTAxMy4wIKXMDSoASAFQAw%3D%3D');
+  if (config.events) initEventFieldOverrides(config.events);
 
   const countdownDate = config.countdownDate ?? '2026-12-06T06:00:00.000Z';
-  initDateReveal(countdownDate, `${config.name1Display ?? 'Priti'} & ${config.name2Display ?? 'Ankit'}`);
+  initDateReveal(countdownDate, `${config.name1Display ?? 'Ankit'} & ${config.name2Display ?? 'Priti'}`);
   if (config.musicUrl) initMusicPlayer(config.musicUrl);
   if (config.eventCardBack) {
     initEventCards(
