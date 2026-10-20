@@ -6,7 +6,6 @@ import { initDateReveal } from './components/ui/Countdown.js';
 import { initMusicPlayer } from './components/ui/MusicPlayer.js';
 import { initEventCards } from './components/sections/Events.js';
 import { initNavigation } from './components/layout/Navigation.js';
-import { initWatermark } from './components/layout/Watermark.js';
 import { initScrollAnimations } from './utils/animation.js';
 import { initSmoothScroll } from './utils/scroll.js';
 import { getConfig } from './utils/config-loader.js';
@@ -129,7 +128,6 @@ function init() {
   const config = getConfig();
 
   initOptimizedImages();
-  initWatermark();
   initSmoothScroll();
   initScrollAnimations();
   initNavigation();

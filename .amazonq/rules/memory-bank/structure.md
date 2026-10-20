@@ -49,7 +49,6 @@ MissingPieceFramerInvitation/
 main.js
   ├── getConfig()            ← config-loader.js reads window.WEDDING_CONFIG
   ├── initOptimizedImages()  ← inline MutationObserver for image src swaps
-  ├── initWatermark()        ← layout/Watermark.js
   ├── initSmoothScroll()     ← utils/scroll.js
   ├── initScrollAnimations() ← utils/animation.js
   ├── initNavigation()       ← layout/Navigation.js
